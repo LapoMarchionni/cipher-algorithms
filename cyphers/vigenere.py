@@ -72,8 +72,16 @@ class Vigenere():
         return plain_text
 
     def force_key(self, cypher_text, length=3):
+        seq_repetitions = {}
         for i in range(0, len(cypher_text), length):
             block = cypher_text[i:i + length]
-            repetitions = re.findall(r'(' + block + ')', cypher_text)
-            if len(repetitions) > 1 and len(block) == length:
-                print(repetitions)
+            block_rep = re.findall(r'(' + block + ')', cypher_text)
+            if len(block_rep) > 1 and len(block) == length:
+                seq_repetitions[block] = []
+                first_seq = cypher_text.find(block)
+                start = first_seq
+                for seq_rep in block_rep[1:]:
+                    seq_i = cypher_text.find(seq_rep, start + 1)
+                    seq_repetitions[block].append(seq_i - first_seq)
+                    start = seq_i
+        print(seq_repetitions)
