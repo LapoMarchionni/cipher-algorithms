@@ -6,7 +6,7 @@ import os
 import re
 
 
-class Vigenere():
+class Vigenere:
     """Vigenere cypher."""
 
     def __init__(self, key=None, alphabet=None, key_length=32):
