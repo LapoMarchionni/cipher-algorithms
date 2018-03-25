@@ -41,14 +41,15 @@ class Hill:
         """Remove every space and punctuations."""
         return re.sub('[' + string.punctuation + '|\s]', '', text).lower()
 
-    def _string_to_matrix(self, text):
+    def _string_to_matrix(self, text, plain_text=True):
         """Convertr a text into a matrix of q-grams long M. If the lenght
         of the text is not a multiplier of M, then add extra letters to
         the text that will be removed later.
         """
-        self.extra_letters = len(text) % self.M
-        if self.extra_letters != 0:
-            text += ''.join(['z' for i in range(self.extra_letters)])
+        if plain_text:
+            self.extra_letters = len(text) % self.M
+            if self.extra_letters != 0:
+                text += ''.join(['z' for i in range(self.extra_letters)])
         matrix = map(
             lambda q: [self.alphabet.index(c) for c in q],
             [text[n:n+2] for n in range(0, len(text), self.M)]
@@ -62,7 +63,7 @@ class Hill:
         text = ''
         for q_gram in matrix:
             text += ''.join([self.alphabet[i] for i in q_gram])
-        return text[:-(self.extra_letters)]
+        return text
 
     def encrypt(self, plain_text):
         """Encrypt a plain text using the entered or generated key. Before
@@ -85,10 +86,10 @@ class Hill:
 
     def decrypt(self, cipher_text):
         """Decrypt a precedently encrypted plain text with the class key."""
-        q_grams = self._string_to_matrix(cipher_text)
+        q_grams = self._string_to_matrix(cipher_text, plain_text=False)
         mod_func = np.vectorize(lambda x: x % self.N)
         plain_text = []
         for q_gram in q_grams:
             plain_text.append(mod_func(self.key_i.dot(q_gram)).tolist())
         plain_text = np.array(plain_text)
-        return self._matrix_to_string(plain_text)
+        return self._matrix_to_string(plain_text)[:-(self.extra_letters)]
