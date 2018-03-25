@@ -13,6 +13,7 @@ text = "Once upon a midnight dreary, while I pondered, weak and weary, Over many
 encrypted_text = hill.encrypt(text)
 ```
 `encrypted_text` will contain an encrypted string with the current key like `boiexibosgtqzrxqebxttcswtlrnlwbojfxtxbeekkyvcytcgsbxjxnayyuamewdnatrnwqciqdppvsopknznhxezvkzhqjk`
+
 Decrypt with decrypt()
 ```python
 encrypted_text = "boiexibosgtqzrxqebxttcswtlrnlwbojfxtxbeekkyvcytcgsbxjxnayyuamewdnatrnwqciqdppvsopknznhxezvkzhqjk"
