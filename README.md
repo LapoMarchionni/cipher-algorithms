@@ -1,5 +1,5 @@
 # cipher-algorithms
-Requires plugins. 
+Requires plugins and `python 3` to work.
 ```
 nunmpy>=1.14.2
 matplotlib>=2.2.2
