@@ -33,13 +33,15 @@ class Hill:
         """Generate a random matrix M x M."""
         not_invertible = True
         f = np.vectorize(lambda x: int(round(x)) if x.is_integer() else None)
+        f2 = np.vectorize(lambda x: int(round(x)))
         if key:
-            try:
-                key = np.array(key)
-                key_i = f(np.linalg.inv(key))
-                return key, key_i
-            except:
-                raise Exception("Key is not invertible.")
+            # try:
+            key = np.array(key)
+            print(np.linalg.inv(key) + 26)
+            key_i = np.linalg.inv(key)
+            return key, key_i
+            # except:
+            #     raise Exception("Key is not invertible.")
         while not_invertible:
             key = np.array(np.random.randint(self.N, size=(self.M, self.M)))
             try:
@@ -128,8 +130,7 @@ class Hill:
         lenght.
         """
         g, x, y = Hill._egcd(det, self.N)
-        if g != 1:
-            return x % self.N
+        return x % self.N
 
     def _invert_matrix(self, matrix):
         """ Invert a matrix using Cramer method adapted in mod N.
@@ -137,7 +138,7 @@ class Hill:
         Every element in A^-1 i,j = -1^(i+j) * det A^1- * 1/det A
         where 1/det A = (det A)^-1 mod N.
         """
-        det_A = int(round(np.linalg.det(matrix)))
+        det_A = int(round(np.linalg.det(matrix))) % self.N
         det_A_inv = self._modinv(det_A)
         P_inv = np.empty([len(matrix), len(matrix)])
         for i in range(len(matrix)):
@@ -146,7 +147,7 @@ class Hill:
                 tmp_matrix = np.delete(tmp_matrix, i, 1)
                 P_inv[i][j] = (
                     (pow(-1, i + j) *
-                     int(np.linalg.det(tmp_matrix)) * det_A_inv)
+                     int(round(np.linalg.det(tmp_matrix))) * det_A_inv)
                     % self.N
                 )
         return P_inv
@@ -178,8 +179,8 @@ class Hill:
                     plain_text[block:block + block_length]).tolist()[0])
                 C.append(self._string_to_matrix(
                     cipher_text[block:block + block_length]).tolist()[0])
-            P = np.matrix(P)
-            C = np.matrix(C)
+            P = np.matrix(P).T
+            C = np.matrix(C).T
             last_block += pow(block_length, 2)
             is_invertible = self._is_invertible(P)
             if last_block >= len(plain_text):
@@ -187,6 +188,7 @@ class Hill:
                 break
         P_inv = self._invert_matrix(P)
         key = mod_func(P_inv * C)
+        return key
         try:
             key_i = f(np.linalg.inv(key))
             if None in key_i:
