@@ -1,3 +1,4 @@
+from fractions import gdc
 import numpy as np
 import string
 import random
@@ -92,4 +93,26 @@ class Hill:
         for q_gram in q_grams:
             plain_text.append(mod_func(self.key_i.dot(q_gram)).tolist())
         plain_text = np.array(plain_text)
-        return self._matrix_to_string(plain_text)[:-(self.extra_letters)]
+        if self.extra_letters != 0:
+            return self._matrix_to_string(plain_text)[:-(self.extra_letters)]
+        return self._matrix_to_string(plain_text)
+
+    def _is_invertible(self, matrix):
+        """Check if a matrix is invertible mod N."""
+        pass
+
+    def force_key(self, plain_text, cipher_text, block_length):
+        plain_text = self._clear_text(plain_text)
+        last_block = 0
+        is_invertible = False
+        while not is_invertible:
+            P, C = [], []
+            for block in range(last_block, block_length**2, block_length):
+                P.append(self._string_to_matrix(
+                    plain_text[block:block+block_length]).tolist()[0])
+                C.append(self._string_to_matrix(
+                    cipher_text[block:block+block_length]).tolist()[0])
+            P = np.matrix(P)
+            C = np.matrix(C)
+            is_invertible = self._is_invertible(P)
+            print(is_invertible)
