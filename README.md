@@ -39,7 +39,7 @@ vigenere = Vigenere(key=None, alphabet=None, key_lenght=32)
 ```
 Then encrypt a text with `encrypt()` function
 ```python
-text = "Once upon a midnight dreary, while I pondered, weak and weary, Over many a quaint and curious volume of forgotten lore"
+text = "Once upon a midnight dreary, while I pondered, weak and weary"
 encrypted_text = vigenere.encrypt(text)
 ```
 `encrypted_text` will contain an encrypted string with the current key like `zfgxjglwuonfgpyejbqkflmocdihumdkowvxsnbjecsfplsoo`
