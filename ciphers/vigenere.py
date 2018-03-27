@@ -7,13 +7,13 @@ import re
 
 
 class Vigenere:
-    """Vigenere cypher."""
+    """Vigenere cipher."""
 
     def __init__(self, key=None, alphabet=None, key_length=32):
-        """Init the Vigenere Cypher class.
+        """Init the Vigenere Cipher class.
 
         Args:
-            key: a string used as the cypher key.
+            key: a string used as the cipher key.
                 [DEFAULT: random generated string of letters]
             alphabet: the alphabet to be used to encrypt and decrypt.
                 [DEFAULT: ascii_lowercase letters]
@@ -44,26 +44,26 @@ class Vigenere:
         Args:
             plain_text: a basic text to be encrypted.
         Returns:
-            The relative encrypted cypher text.
+            The relative encrypted cipher text.
         """
         key_char_pairs = zip(self._clear_text(plain_text), cycle(self.key))
-        cypher_text = ""
+        cipher_text = ""
         for pair in key_char_pairs:
             e_char = ((self.alphabet.index(pair[0]) +
                        self.alphabet.index(pair[1])) % self.language_length)
-            cypher_text += self.alphabet[e_char]
-        return cypher_text
+            cipher_text += self.alphabet[e_char]
+        return cipher_text
 
-    def decrypt(self, cypher_text):
-        """Decrypt a cypher text using key used to encrypt it. The result is
+    def decrypt(self, cipher_text):
+        """Decrypt a cipher text using key used to encrypt it. The result is
         still without spaces and punctuations.
 
         Args:
-            cypher_text: an encrypted text to be decrypted.
+            cipher_text: an encrypted text to be decrypted.
         Returns:
             The relative decrypted plain text.
         """
-        key_char_pairs = zip(cypher_text, cycle(self.key))
+        key_char_pairs = zip(cipher_text, cycle(self.key))
         plain_text = ""
         for pair in key_char_pairs:
             e_char = ((self.alphabet.index(pair[0]) -
