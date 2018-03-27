@@ -24,9 +24,9 @@ class Hill:
         self.alphabet = (alphabet if alphabet is not None
                          else string.ascii_lowercase)
         self.N = len(self.alphabet)
+        # print("Key Inv", self.
         self.key, self.key_i = self._generate_key(key)
-        print(self.key)
-        print(self.key_i)
+        # print("Key", self.key)key_i)
         self.extra_letters = 0
 
     def _generate_key(self, key):
@@ -35,13 +35,12 @@ class Hill:
         f = np.vectorize(lambda x: int(round(x)) if x.is_integer() else None)
         f2 = np.vectorize(lambda x: int(round(x)))
         if key:
-            # try:
-            key = np.array(key)
-            print(np.linalg.inv(key) + 26)
-            key_i = np.linalg.inv(key)
-            return key, key_i
-            # except:
-            #     raise Exception("Key is not invertible.")
+            try:
+                key = np.array(key)
+                key_i = np.linalg.inv(key)
+                return key, key_i
+            except:
+                raise Exception("Key is not invertible.")
         while not_invertible:
             key = np.array(np.random.randint(self.N, size=(self.M, self.M)))
             try:
@@ -187,16 +186,5 @@ class Hill:
                 print("Inverted Plain Text matrix not found.")
                 break
         P_inv = self._invert_matrix(P)
-        key = mod_func(P_inv * C)
-        return key
-        try:
-            key_i = f(np.linalg.inv(key))
-            if None in key_i:
-                return self.force_key(
-                    plain_text[last_block:],
-                    cipher_text[last_block:], block_length)
-            return key
-        except:
-            return self.force_key(
-                plain_text[last_block:],
-                cipher_text[last_block:], block_length)
+        key = mod_func(C * P_inv)
+        return key.tolist()
